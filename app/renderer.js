@@ -110,7 +110,7 @@ btnSubmit.addEventListener('click', async () => {
         if (!result.success) throw new Error(result.error);
 
         const nomorSurat = result.result.nomorSurat;
-        const label = entry.jenisSurat === 'Nodin' ? 'Nota Dinas' : 'Laporan Kejadian';
+        const label = entry.jenisSurat.includes('Nodin') ? 'Nodin/BA' : 'Laporan Kejadian';
 
         resultNumber.textContent = nomorSurat;
         resultTypeText.textContent = `${label} berhasil disimpan`;
@@ -156,7 +156,7 @@ async function loadHistory() {
         const result = await window.api.getData();
         if (!result.success) throw new Error(result.error);
         historyData = result.data;
-        statNodin.textContent = historyData.filter(e => e.jenisSurat === 'Nodin').length;
+        statNodin.textContent = historyData.filter(e => e.jenisSurat && e.jenisSurat.includes('Nodin')).length;
         statLK.textContent = historyData.filter(e => e.jenisSurat === 'LK').length;
         statTotal.textContent = historyData.length;
         renderHistory(historyData);
@@ -172,7 +172,7 @@ function renderHistory(data) {
     }
     const sorted = [...data].sort((a, b) => b.rowIndex - a.rowIndex);
     historyList.innerHTML = sorted.map(e => {
-        const t = e.jenisSurat === 'Nodin' ? 'nodin' : 'lk';
+        const t = (e.jenisSurat && e.jenisSurat.includes('Nodin')) ? 'nodin' : 'lk';
         const n = e.nomorSurat || '-';
         return `<div class="history-item">
           <div class="hi-top">
@@ -202,7 +202,7 @@ const filterLK = document.getElementById('filterLK');
 const filterAll = document.getElementById('filterAll');
 
 filterNodin.addEventListener('click', () => {
-    renderHistory(historyData.filter(e => e.jenisSurat === 'Nodin'));
+    renderHistory(historyData.filter(e => e.jenisSurat && e.jenisSurat.includes('Nodin')));
 });
 
 filterLK.addEventListener('click', () => {

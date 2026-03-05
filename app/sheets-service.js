@@ -67,7 +67,7 @@ async function readAllData() {
 async function getNextNumber(jenisSurat) {
     const response = await sheets.spreadsheets.values.get({
         spreadsheetId,
-        range: jenisSurat === 'Nodin'
+        range: (jenisSurat && jenisSurat.includes('Nodin'))
             ? `'${sheetName}'!H5:H5556`
             : `'${sheetName}'!I5:I5556`,
         valueRenderOption: 'FORMATTED_VALUE',
@@ -160,7 +160,7 @@ async function appendEntry(entry) {
     let nomorLK = '';
     let nomorSurat = '';
 
-    if (jenisSurat === 'Nodin') {
+    if (jenisSurat && jenisSurat.includes('Nodin')) {
         nomorNodin = nextNumber;
         nomorSurat = `LANTASKIM/${paddedNumber}/${bulanRomawi}/${tahun}`;
     } else {
