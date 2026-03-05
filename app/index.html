@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Nodin Widget</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="widget" id="widget">
+    <!-- Title Bar -->
+    <div class="title-bar" id="titleBar">
+      <div class="title-bar-left">
+        <img class="title-icon" src="../public/Logo Ditjen Imigrasi .png"
+          style="width: 18px; height: 18px; object-fit: contain; margin-right: 2px;" alt="Logo Imigrasi">
+        <span class="title-text">Nodin · Lantaskim</span>
+      </div>
+      <div class="title-bar-right">
+        <button class="title-btn" id="btnMinimize"><svg width="10" height="10" viewBox="0 0 10 10">
+            <path d="M2 5h6" stroke="currentColor" stroke-width="1" stroke-linecap="round" />
+          </svg></button>
+        <button class="title-btn close-btn" id="btnClose"><svg width="10" height="10" viewBox="0 0 10 10">
+            <path d="M2 2l6 6M8 2l-6 6" stroke="currentColor" stroke-width="1" stroke-linecap="round" />
+          </svg></button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-nav">
+      <button class="tab-btn active" id="tabInput">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 5v14M5 12h14" stroke-linecap="round" />
+        </svg>
+        Buat Baru
+      </button>
+      <button class="tab-btn" id="tabHistory">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 6v6l4 2" stroke-linecap="round" />
+        </svg>
+        Riwayat
+      </button>
+    </div>
+
+    <!-- Input Tab -->
+    <div class="tab-content active" id="contentInput">
+      <div id="formView">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tanggal</label>
+            <input type="date" id="tanggalNodin" class="fc">
+          </div>
+          <div class="form-group">
+            <label>Jenis</label>
+            <select id="jenisSurat" class="fc">
+              <option value="" disabled selected>Pilih...</option>
+              <option value="Nodin">Nota Dinas</option>
+              <option value="LK">Laporan Kejadian</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Ringkasan</label>
+          <textarea id="isiRingkasan" class="fc" rows="3" placeholder="Isi ringkasan surat..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Pengelola</label>
+          <input type="text" id="pengelola" class="fc" placeholder="Nama pengelola...">
+        </div>
+        <button class="btn-generate" id="btnSubmit" disabled>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4z" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          Generate & Simpan
+        </button>
+      </div>
+
+      <!-- Result -->
+      <div id="resultView" class="result-view" style="display:none;">
+        <div class="result-card">
+          <div class="result-success">
+            <div class="result-check">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </div>
+            <div class="result-success-text">
+              <div class="result-title" id="resultTypeText">Berhasil disimpan</div>
+              <div class="result-sub" id="resultMeta"></div>
+            </div>
+          </div>
+          <div class="result-nomor-label">NOMOR SURAT</div>
+          <div class="result-nomor-box">
+            <span class="result-nomor" id="resultNumber"></span>
+            <button class="btn-copy" id="btnCopy">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" />
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+              </svg>
+              <span id="copyText">Salin</span>
+            </button>
+          </div>
+        </div>
+        <button class="btn-new" id="btnNewEntry">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 5v14M5 12h14" stroke-linecap="round" />
+          </svg>
+          Buat Surat Baru
+        </button>
+      </div>
+    </div>
+
+    <!-- History Tab -->
+    <div class="tab-content" id="contentHistory">
+      <div class="search-box">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <path d="M21 21l-4.35-4.35" stroke-linecap="round" />
+        </svg>
+        <input type="text" id="searchHistory" placeholder="Cari...">
+      </div>
+      <div class="history-stats">
+        <span class="badge blue clickable" id="filterNodin">Nodin <strong id="statNodin">0</strong></span>
+        <span class="badge orange clickable" id="filterLK">LK <strong id="statLK">0</strong></span>
+        <span class="badge gray clickable" id="filterAll">Total <strong id="statTotal">0</strong></span>
+      </div>
+      <div class="history-list" id="historyList">
+        <div class="loading">
+          <div class="spinner"></div><span>Memuat...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <div class="status-dot" id="statusDot"></div>
+      <span class="status-text" id="statusText">Menghubungkan...</span>
+    </div>
+  </div>
+  <script src="renderer.js"></script>
+</body>
+
+</html>

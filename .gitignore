@@ -1,0 +1,7 @@
+node_modules/
+app/node_modules/
+credentials/
+dist/*
+!dist/Nodinapp.exe
+.env
+*.bak

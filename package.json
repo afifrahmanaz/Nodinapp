@@ -1,0 +1,39 @@
+{
+    "name": "nodin-widget",
+    "version": "1.0.0",
+    "description": "Desktop widget untuk generate nomor Nodin/LK Lantaskim Kanim PKP",
+    "scripts": {
+        "start": "node start.js",
+        "install-app": "cd app && npm install",
+        "setup": "npm install && cd app && npm install",
+        "build": "electron-builder --win"
+    },
+    "author": "Nodin App",
+    "license": "MIT",
+    "devDependencies": {
+        "electron": "^33.4.11",
+        "electron-builder": "^25.1.8"
+    },
+    "build": {
+        "appId": "com.nodinapp.widget",
+        "productName": "Nodin Widget",
+        "directories": {
+            "app": "app"
+        },
+        "win": {
+            "target": "nsis",
+            "icon": "public/icon.ico"
+        },
+        "nsis": {
+            "artifactName": "Nodinapp.exe",
+            "installerIcon": "public/icon.ico",
+            "uninstallerIcon": "public/icon.ico",
+            "oneClick": false,
+            "allowToChangeInstallationDirectory": true
+        }
+    },
+    "dependencies": {
+        "jimp": "^1.6.0",
+        "png-to-ico": "^3.0.1"
+    }
+}

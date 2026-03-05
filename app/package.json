@@ -1,0 +1,8 @@
+{
+  "name": "nodin-widget-app",
+  "version": "1.0.0",
+  "main": "main.js",
+  "dependencies": {
+    "googleapis": "^140.0.1"
+  }
+}
