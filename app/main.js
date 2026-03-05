@@ -8,7 +8,7 @@ let tray;
 // Spreadsheet config
 const SPREADSHEET_ID = '1FZiIyewRin7UHsOb_WkdovSyZSveYMZP9XYwHKq2Jwc';
 const SHEET_NAME = 'NodinLK Lantaskim 2026';
-const CREDENTIALS_PATH = path.join(__dirname, '..', 'credentials', 'nodinapp-3aead65d0a22.json');
+const CREDENTIALS_PATH = path.join(__dirname, 'credentials', 'nodinapp-3aead65d0a22.json');
 
 function createWindow() {
     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
@@ -18,7 +18,7 @@ function createWindow() {
         height: 340,
         x: width - 315,
         y: height - 355,
-        icon: path.join(__dirname, '..', 'public', 'Logo Nodin app cropped.png'),
+        icon: path.join(__dirname, 'public', 'Logo Nodin app cropped.png'),
         frame: false,
         transparent: false,
         backgroundColor: '#f8f9fb',
@@ -45,7 +45,7 @@ function createWindow() {
 }
 
 function createTray() {
-    tray = new Tray(path.join(__dirname, '..', 'public', 'Logo Nodin app cropped.png'));
+    tray = new Tray(path.join(__dirname, 'public', 'Logo Nodin app cropped.png'));
     const contextMenu = Menu.buildFromTemplate([
         {
             label: 'Tampilkan Widget',

@@ -1,6 +1,6 @@
 node_modules/
 app/node_modules/
-credentials/
+app/credentials/
 dist/*
 !dist/Nodinapp.exe
 .env

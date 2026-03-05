@@ -22,12 +22,12 @@
         },
         "win": {
             "target": "nsis",
-            "icon": "public/icon.ico"
+            "icon": "app/public/icon.ico"
         },
         "nsis": {
             "artifactName": "Nodinapp.exe",
-            "installerIcon": "public/icon.ico",
-            "uninstallerIcon": "public/icon.ico",
+            "installerIcon": "app/public/icon.ico",
+            "uninstallerIcon": "app/public/icon.ico",
             "oneClick": false,
             "allowToChangeInstallationDirectory": true
         }
