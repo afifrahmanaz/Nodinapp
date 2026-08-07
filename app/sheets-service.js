@@ -7,7 +7,7 @@ let sheetName;
 /**
  * Initialize Google Sheets API with Service Account
  */
-async function init(credentialsPath, sheetId, name) {
+async function init(credentialsPath, sheetId) {
     const auth = new google.auth.GoogleAuth({
         keyFile: credentialsPath,
         scopes: ['https://www.googleapis.com/auth/spreadsheets'],
@@ -16,7 +16,13 @@ async function init(credentialsPath, sheetId, name) {
     const client = await auth.getClient();
     sheets = google.sheets({ version: 'v4', auth: client });
     spreadsheetId = sheetId;
-    sheetName = name;
+    
+    // Automatically fetch the name of the first sheet
+    const meta = await sheets.spreadsheets.get({ spreadsheetId });
+    if (!meta.data.sheets || meta.data.sheets.length === 0) {
+        throw new Error("Spreadsheet tidak memiliki sheet/tab.");
+    }
+    sheetName = meta.data.sheets[0].properties.title;
 }
 
 /**
@@ -28,7 +34,7 @@ async function init(credentialsPath, sheetId, name) {
 async function readAllData() {
     const response = await sheets.spreadsheets.values.get({
         spreadsheetId,
-        range: `'${sheetName}'!A5:M5556`,
+        range: 'A5:M5556',
         valueRenderOption: 'FORMATTED_VALUE',
     });
 
@@ -68,8 +74,8 @@ async function getNextNumber(jenisSurat) {
     const response = await sheets.spreadsheets.values.get({
         spreadsheetId,
         range: (jenisSurat && jenisSurat.includes('Nodin'))
-            ? `'${sheetName}'!H5:H5556`
-            : `'${sheetName}'!I5:I5556`,
+            ? 'H5:H5556'
+            : 'I5:I5556',
         valueRenderOption: 'FORMATTED_VALUE',
     });
 
@@ -92,7 +98,7 @@ async function getNextNumber(jenisSurat) {
 async function findFirstEmptyRow() {
     const response = await sheets.spreadsheets.values.get({
         spreadsheetId,
-        range: `'${sheetName}'!B5:B5556`,
+        range: 'B5:B5556',
         valueRenderOption: 'FORMATTED_VALUE',
     });
 
@@ -128,10 +134,9 @@ function toRoman(num) {
 }
 
 /**
- * Format date string to DD/MM/YYYY or sheet-compatible format
+ * Format date string to keep as YYYY-MM-DD so Google Sheets parses it natively as Date.
  */
 function formatDateForSheet(dateStr) {
-    // Input: YYYY-MM-DD, Output: keep as-is for Google Sheets
     return dateStr;
 }
 
@@ -146,10 +151,23 @@ async function appendEntry(entry) {
     // Find the first empty row
     const targetRow = await findFirstEmptyRow();
 
-    // Calculate derived values
-    const date = new Date(tanggal);
-    const bulanRomawi = toRoman(date.getMonth() + 1);
-    const tahun = date.getFullYear().toString();
+    // Calculate derived values safely (avoiding timezone offset issues from new Date)
+    const dateParts = tanggal.split('-');
+    let bulanRomawi = '';
+    let tahun = '';
+    let formattedTanggal = tanggal;
+    
+    if (dateParts.length === 3) {
+        tahun = dateParts[0];
+        const monthNum = parseInt(dateParts[1], 10);
+        bulanRomawi = toRoman(monthNum);
+        formattedTanggal = formatDateForSheet(tanggal);
+    } else {
+        // Fallback if somehow date is invalid
+        const d = new Date();
+        tahun = d.getFullYear().toString();
+        bulanRomawi = toRoman(d.getMonth() + 1);
+    }
 
     // Get next number
     const nextNumber = await getNextNumber(jenisSurat);
@@ -171,7 +189,7 @@ async function appendEntry(entry) {
     // Prepare row data: A(NO) B(Tanggal) C D E F G H I J K L M
     // Note: Column A has formula, we write from B onwards
     const rowData = [
-        tanggal,           // B - Tanggal Nodin
+        formattedTanggal,  // B - Tanggal Nodin
         'LANTASKIM',       // C - Klasifikasi
         'LK/LANTASKIM',    // D - LK/Klasifikasi
         bulanRomawi,        // E - Bulan Romawi
@@ -188,7 +206,7 @@ async function appendEntry(entry) {
     // Write to the target row (columns B through M)
     await sheets.spreadsheets.values.update({
         spreadsheetId,
-        range: `'${sheetName}'!B${targetRow}:M${targetRow}`,
+        range: `B${targetRow}:M${targetRow}`,
         valueInputOption: 'USER_ENTERED',
         requestBody: {
             values: [rowData],
@@ -211,7 +229,7 @@ async function appendEntry(entry) {
 async function updateStatus(rowIndex, status) {
     await sheets.spreadsheets.values.update({
         spreadsheetId,
-        range: `'${sheetName}'!M${rowIndex}`,
+        range: `M${rowIndex}`,
         valueInputOption: 'USER_ENTERED',
         requestBody: {
             values: [[status]],

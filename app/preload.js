@@ -11,4 +11,11 @@ contextBridge.exposeInMainWorld('api', {
     // Window controls
     minimizeWindow: () => ipcRenderer.send('window:minimize'),
     closeWindow: () => ipcRenderer.send('window:close'),
+
+    // Settings
+    getSettings: () => ipcRenderer.invoke('settings:get'),
+    saveSettings: (settings) => ipcRenderer.invoke('settings:save', settings),
+
+    // Utils
+    openExternal: (url) => ipcRenderer.send('open-url', url)
 });

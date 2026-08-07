@@ -18,18 +18,36 @@
         "appId": "com.nodinapp.widget",
         "productName": "Nodin Widget",
         "directories": {
-            "app": "app"
+            "app": "app",
+            "output": "dist"
         },
+        "files": [
+            "**/*",
+            "!**/public/*.csv",
+            "!**/public/Logo Nodin app.png",
+            "!**/public/Logo Nodin app resized.png"
+        ],
+        "asar": true,
+        "compression": "maximum",
         "win": {
-            "target": "nsis",
+            "target": [
+                {
+                    "target": "nsis",
+                    "arch": ["x64"]
+                }
+            ],
             "icon": "app/public/icon.ico"
         },
         "nsis": {
-            "artifactName": "Nodinapp.exe",
+            "artifactName": "NodinApp-Setup-${version}.exe",
             "installerIcon": "app/public/icon.ico",
             "uninstallerIcon": "app/public/icon.ico",
             "oneClick": false,
-            "allowToChangeInstallationDirectory": true
+            "allowToChangeInstallationDirectory": true,
+            "perMachine": false,
+            "createDesktopShortcut": true,
+            "createStartMenuShortcut": true,
+            "shortcutName": "Nodin Widget"
         }
     },
     "dependencies": {
